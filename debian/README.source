@@ -1,10 +1,27 @@
-elogind for Debian
+elogind for Debian Sid
 -----------------
 
-<this file describes information about the source package, see Debian policy
-manual section 4.14. You WILL either need to modify or delete this file>
+How to build in four steps:
+1. cd to your working directory, then clone the git branch "v239-stable-deb"
+
+    $git clone -b v239-stable-deb  https://github.com/DareDeb-User/elogind.git
+
+2. move into the new git elogind directory and create the source archive
+
+    $ cd elogind/
+    $ git archive --format=tar --prefix=elogind-239.1/ v239-stable-deb | xz > ../elogind_239.1.orig.tar.xz
+
+3. rename the elogind directory in order to match the source archive
+
+    $cd ../
+    $mv elogind elogind-239.1
+
+4. check that the build dependecies listed in debian/control are installed;  then
+    you can build the deb package
+
+    $cd elogind-239.1/
+    $dpkg-buildpackage -us -uc
 
 
-
- -- unknown <ombra@localhost>  Mon, 31 Jul 2017 13:05:12 +0200
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Fri, 19 Oct 2018 22:14:12 +0200
 
