@@ -1,0 +1,4 @@
+lib/elogind/elogind lib/systemd/systemd-logind
+#lib/x86_64-linux-gnu/security/pam_elogind.so /lib/x86_64-linux-gnu/security/pam_systemd.so
+etc/pam.d/elogind-user etc/pam.d/systemd-user
+#usr/share/pam-configs/elogind usr/share/pam-configs/systemd

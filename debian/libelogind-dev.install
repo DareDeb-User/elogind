@@ -1,0 +1,7 @@
+#lib/x86_64-linux-gnu/libelogind.so
+lib/*/libelogind.so
+usr/include/elogind/*
+#lib/x86_64-linux-gnu/pkgconfig usr/lib/x86_64-linux-gnu/
+#usr/lib/x86_64-linux-gnu/pkgconfig
+usr/lib/*/pkgconfig
+#usr/share/man/man3/*

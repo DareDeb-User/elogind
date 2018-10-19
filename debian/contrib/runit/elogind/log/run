@@ -1,0 +1,4 @@
+#!/bin/sh
+
+test -d /var/log/elogind || mkdir /var/log/elogind && chown -R log:adm /var/log/elogind
+exec chpst -u log svlogd -tt /var/log/elogind

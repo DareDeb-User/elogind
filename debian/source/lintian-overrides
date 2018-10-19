@@ -1,0 +1,5 @@
+# elogind-run is an alternate way of starting elogind and must prevent the default dbus service
+# to start, replacing it with a service file that executes /bin/false
+elogind source: binaries-have-file-conflict elogind elogind-run usr/share/dbus-1/system-services/org.freedesktop.login1.service
+# elogind-sysv: same as elogind-run
+elogind source: binaries-have-file-conflict elogind elogind-sysv usr/share/dbus-1/system-services/org.freedesktop.login1.service

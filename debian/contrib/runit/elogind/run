@@ -1,0 +1,28 @@
+#!/bin/sh
+
+NAME=elogind
+DAEMON="/lib/elogind/elogind"
+
+# is the daemon installed?
+test -f $DAEMON || exit 160
+
+##hard runtime dependency
+sv start dbus  &&  sv check dbus  ||  exit 170
+# give time to dbus to be fully up ... FIXED with dbus check-file?
+#sleep 1
+
+##Setting needed variables, creating dirs, mounting fs..
+echo -n "Creating directories for elogind..."
+test -d /run/systemd/ || mkdir -p /run/systemd/
+test -d /run/user || mkdir -p /run/user/
+test -d /sys/fs/cgroup || exit 162
+#test -d /sys/fs/cgroup/elogind/ || mkdir -p /sys/fs/cgroup/elogind/
+echo "done."
+echo  -n "Mounting /run and cgroup filesystems..."
+mountpoint /run/user/ >/dev/null || mount -t tmpfs none /run/user/ -o mode=755
+#mountpoint /sys/fs/cgroup/elogind/ >/dev/null || mount -t cgroup cgroup /sys/fs/cgroup/elogind -o none,name=elogind
+echo "done."
+
+##starting as root
+echo "Starting Elogind.."
+exec /lib/elogind/elogind 2>&1

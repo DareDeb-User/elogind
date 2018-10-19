@@ -1,0 +1,4 @@
+lib/x86_64-linux-gnu/security/pam_elogind.so
+#lib/x86_64-linux-gnu/security/pam_elogind.la
+../contrib/pam-configs usr/share/
+usr/share/man/man8/pam_elogind*

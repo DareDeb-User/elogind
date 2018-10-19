@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# this file is executed both on 'start failure' and on 'service exit'
+
+## handle run's file (non-zero) exit status with "verbose" messages here
+SERVICE=elogind
+
+[ $1 = -1 ] && echo "runsv: ERROR $1 in $SERVICE: unexpected error or wrong sh syntax"
+
+[ $1 = 111 ] && [ $2 = 0 ] && echo "runsv: ERROR $1 in $SERVICE: cannot start run"
+
+[ $1 = 160 ] && echo "runsv: ERROR $1 in $SERVICE: wrong path or not installed" \
+   && sv d $(dirname $0) && exit 0
+
+[ $1 = 162 ] && echo "runsv: ERROR $1 in $SERVICE: configtest or early setup failed" \
+   && sv d $(dirname $0) && exit 0
+   
+[ $1 = 170 ] && echo "runsv: ERROR $1 in $SERVICE: a runtime hard-dependecy is missing" \
+   && sv d $(dirname $0) && exit 0
+
+## handle daemon's specific nonzero exit status
+
+## if the daemon leave files around, do the cleanup here
+# rm /var/run/daemon.pid

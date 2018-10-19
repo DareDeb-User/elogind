@@ -1,0 +1,222 @@
+elogind (239.1-1) UNRELEASED; urgency=medium
+
+  * new upstream stable release
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Fri, 19 Oct 2018 18:43:16 +0200
+
+elogind (239.1~rc3-1) unstable; urgency=medium
+
+  * new upstream rc3
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Mon, 15 Oct 2018 23:48:55 +0200
+
+elogind (239.1~rc2-1) unstable; urgency=medium
+
+  * upstream rc2
+  * Rules: reenable debug with -Ddebug-extra, following systemd upstream
+  * Ship libelogind-dev's man pages into the new libelogind-doc package:
+     this is to avoid conflict with libsystemd-dev man pages and allow
+     for parallel install of libsystemd-dev and libelogind-dev
+  * turn elogind's Depends on Sysv | runit-init  into a Pre-Depends
+  * elogind-sysv:
+     - add a sysv-elogind symlink to elogind
+     - use the sysv-elogind symlink to check whether the
+       sysv-elogind package is installed and prevent the sysv
+       script from starting in case it's not
+  *  add lintian override for 'binaries-have-file-conflict' (elogind-sysv|run)
+  *  Clean up for itp:
+     - removing comments and old code from rules
+     - removing Breaks and Replaces that are only relevant locally from control
+     - removing some old files in contrib/
+     - removing old patches dir patches/old
+     - remove the TODO file
+     - remove the README.Debian
+     - removing duplicates-filed section and priority in control
+     - redirect output of update.rc.d to /dev/null in elogind-sysv maintscript
+     - bump Standards Version to 4.2.1: add 'Rules-Requires-Root: no' and
+       set debhelper >=10.4 as a build-dependency
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Thu, 27 Sep 2018 10:18:07 +0200
+
+elogind (239.1~rc1-2) unstable; urgency=medium
+
+  * Buildflags: replace local with Debian standard buildflags;
+     this mean remove -march=core2  (will not work on older
+     processors still supported by Debian) and readd -g (this
+     fix lintian debug-file-with-no-debug-symbols)
+  * libelogind-dev: move man pages into man3-e to avoid conflicts
+     with libsystemd-dev man pages
+  * rules: disable debug
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Sun, 23 Sep 2018 22:42:25 +0200
+
+elogind (239.1~rc1-1) unstable; urgency=medium
+
+  * New upstream rc
+  * rules:
+     - fix a typo in override_dh_test that make uneffective the
+       override; also add a contitional statement for nocheck
+     - install the build tests in elogind's doc
+  * Elogind-run: do 'sv d elogind' in postinst when switching from
+     dbus| sysv
+  * Elogind: add breaks with elogind-run|sysv <= 238.1-4
+  * Elogind-sysv: update maintscripts
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Wed, 19 Sep 2018 13:34:57 +0200
+
+elogind (238.1-5) unstable; urgency=medium
+
+  [ Lorenzo Puliti ]
+  * elogind-run:
+    -  move the test for log directory from
+       postinst to the log run's file
+    -  add a diversion for elogind's dbus service
+    -  no longer "breaks|replace" elogind-dbus (is removed)
+  * elogind:
+    -  now is dbus-activeted by default; update the
+       description accordingly
+    -  now breaks and replaces elogind-dbus
+    -  drop recommends of dbus-run|sysv to suggests
+    -  the elogind-dbus package is removed
+  * elogind-sysv:
+    -  add a diversion for elogind's dbus service
+    -  no longer "breaks|replace" elogind-dbus (is removed)
+    -  updating directories and mountpoint setup
+  * libelogind-dev:
+    -  remove breaks|replace with libsystemd-dev allowing
+       parallel install
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Wed, 29 Aug 2018 22:55:37 +0200
+
+elogind (238.1-4) unstable; urgency=medium
+
+  * upstream stable realease (v238.1)
+  * remove patch 'dbus-fix-wrong-bin-path': no longer necessary
+    since v238
+  * rules: set poweroff-path to /sbin/shutdown
+  * libelogind0.install.in: update lib version to 0.22
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Thu, 28 Jun 2018 18:45:22 +0200
+
+elogind (238.1-3) unstable; urgency=medium
+
+  * readd manpages that were missing in v238 to *.install
+    files (fixed upstream)
+  * remove patch to fix tests failure due to c++style
+    comment (fixed upstream)
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Fri, 22 Jun 2018 01:21:16 +0200
+
+elogind (238.1-2) unstable; urgency=medium
+
+  * test commit 839a2a7
+  * add patch to fix tests failure
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Mon, 18 Jun 2018 18:56:13 +0200
+
+elogind (238.1-1) unstable; urgency=medium
+
+  * new upstream branch v238-stable prerelease
+  * update elogind/libelogind-dev/libelogind0/libpam install files
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Mon, 18 Jun 2018 11:48:19 +0200
+
+elogind (236.1-4) unstable; urgency=medium
+
+  * improve elogind-run run's file:
+     - use start before check to ensure that the wanted status
+       of dbus is up
+     - removing the ' mount /sys/fs/cgroup' as elogind deals with it
+     - add a message to warn about setup failed in finish file
+  * update copyright file
+  * rules: don't kill user process when exiting user's session
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Wed, 06 Jun 2018 12:56:08 +0200
+
+elogind (236.1-3) unstable; urgency=medium
+
+  * improve building on different arch support:
+     - use a libelogind0.install.in
+     - use sed in rules file to replace DEB_HOST_MULTIARCH
+      in libelogind0.install.in
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Sat, 28 Apr 2018 23:11:33 +0200
+
+elogind (236.1-2) unstable; urgency=medium
+
+  * upstream stable release v236.1-stable
+  * remove specific reference to arch (x86-64) in .install files, now building
+     for different arch (linux-only) should work.
+  * move man pam_elogind to libpam-elogind
+  * Remove cgmanager as dependency of service (-run -dbus -sysv) as
+     elogind now set cgroups dir by itself; accordingly update services scripts.
+  * elogind-run:
+    - cleaning-up run file
+    - enable finish file for debugging
+  * elogind: replace runit with runit-init in depends field
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Sat, 28 Apr 2018 22:46:04 +0200
+
+elogind (236.1-1) unstable; urgency=medium
+
+  * FTBFS with glibc>=2.27 fixed upstream ( quilt patch removed)
+  * add elogind-uaccess bin to handle ACL
+  * include commit to fix issue 55 from upstream
+  * removed patch that fix elogind manpage that no longer applies
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Wed, 04 Apr 2018 22:03:47 +0200
+
+elogind (235.4-1) unstable; urgency=medium
+
+  * new stable upstream release
+  * patches:
+    - patch's name now begin with a number
+    - add a patch to correct elogind manpage
+  * improve elogind-run runfile, also a finish file is added for debug
+  * now elogind depends on a init (sysv or runit)
+  * now elogind recommends xserver-xorg-legacy and dbus-x11
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Thu, 29 Mar 2018 14:05:24 +0200
+
+elogind (235-3) unstable; urgency=medium
+
+  * Add 'provide libelogind' to libelogind0
+  * Mantscripts - elogind-run postinst:
+    - check with 'update-service -c' if elogind is already enabled
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Mon, 01 Jan 2018 20:52:36 +0100
+
+elogind (235-2) unstable; urgency=medium
+
+  * rename libelogind into libelogind0 to match SONAME
+  * add patch to fix wrong path in elogind-dbus
+  * Change maint-scripts for init packages:
+    - Do not restart elogind on upgrade (all)
+    - Don't call 'update-rc.d elogind disable' on remove (dbus and sysv);
+      call 'update-rc.d -f elogind remove' only on purge
+    - added preinst (all) to make sure that two way of bringing up
+      elogind are not used at the same time.
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Tue, 19 Dec 2017 15:02:01 +0100
+
+elogind (235-1) unstable; urgency=medium
+
+  * New upstream release
+  * Switch to meson/ninja buildsystem and update rules file
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Sun, 17 Dec 2017 00:57:15 +0100
+
+elogind (234.4-1) unstable; urgency=medium
+
+  * Add 3 different (alternative) init-scripts to manage elogind daemon:
+     elogind-sysv, elogind-run and elogind-dbus
+  * Address some lintian error/warning
+  * Bump Standards-Version to 4.1.2
+
+ -- Lorenzo Puliti  <lorenzo.ru.g@gmail.com>  Wed, 13 Dec 2017 19:57:02 +0100
+
+elogind (234.1-1) unstable; urgency=medium
+
+  * Initial release (Closes: #000000)  <this is for local use only>
+
+ -- Lorenzo Puliti <lorenzo.ru.g@gmail.com>  Mon, 31 Jul 2017 13:05:12 +0200

@@ -1,0 +1,23 @@
+bin/elogind-inhibit
+bin/loginctl
+etc/*
+lib/elogind/elogind
+lib/elogind/elogind-cgroups-agent
+# libshared..
+#usr/lib/elogind/libelogind-shared-* lib/elogind/
+#usr/lib/elogind/libelogind-shared-*
+#new uaccess in v235/236
+lib/elogind/elogind-uaccess-command
+lib/udev/*
+usr/share/bash-completion
+usr/share/dbus-1/system.d/
+usr/share/doc
+usr/share/locale
+usr/share/man/man1
+usr/share/man/man5
+usr/share/man/man7
+usr/share/man/man8/elogind*
+usr/share/polkit-1
+usr/share/zsh
+../contrib/pam.d/ etc/
+../contrib/org.freedesktop.login1.service usr/share/dbus-1/system-services/

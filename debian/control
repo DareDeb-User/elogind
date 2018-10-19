@@ -1,0 +1,121 @@
+Source: elogind
+Section: admin
+Priority: optional
+Maintainer: Lorenzo Puliti <lorenzo.ru.g@gmail.com>
+Standards-Version: 4.2.1
+Rules-Requires-Root: no
+Homepage: https://github.com/elogind/elogind
+Build-Depends: debhelper (>= 10.4~),
+    libc6-dev (>= 2.16),
+    libcap-dev,
+    libmount-dev (>= 2.30),
+    libseccomp-dev (>= 2.3.1),
+    libblkid-dev (>= 2.24),
+    libpam0g-dev (>= 1.1.2),
+    libacl1-dev,
+    libselinux1-dev,
+    libpython3-dev,
+    pkg-config,
+    gperf (>= 3.1),
+    docbook-xsl,
+    xsltproc,
+    python3-lxml,
+    python3,
+    meson (>= 0.44.0),
+    m4,
+    intltool,
+    libpcre2-dev
+
+Package: elogind
+Architecture: linux-any
+Breaks: systemd
+Replaces: systemd
+Pre-Depends: sysvinit-core | runit-init
+Depends: ${shlibs:Depends}, ${misc:Depends}, libelogind0, dbus
+Recommends: libpam-elogind, policykit-1, xserver-xorg-legacy, dbus-x11
+Suggests: elogind-sysv | elogind-run
+Description: User, Seat and Session Manager
+ Elogind is the systemd project's "logind", extracted out to be a
+ standalone daemon. It integrates with PAM to know the set of users that
+ are logged in to a system and whether they are logged in graphically,
+ on the console, or remotely. Elogind exposes this information via the standard
+ org.freedesktop.login1 D-Bus interface, as well as through the file system
+ using systemd's standard /run/systemd layout. This package can be used
+ as a replacement for systemd-logind in systems that are not running systemd
+ as init. Elogind is activated as a dbus-service in case no other init scripts
+ are available; Elogind also has support for suspend, hibernate and
+ hybrid-sleep in it's own code, while for shutdown/reboot/kexec it shells out
+ to halt/reboot/kexec binaries.
+
+Package: elogind-sysv
+Architecture: linux-any
+Breaks: systemd-shim, elogind-run
+Replaces: systemd-shim, elogind-run
+Depends: ${misc:Depends}, lsb-base, elogind, sysvinit-core
+Recommends: libpam-elogind
+Enhances: elogind
+Description: Sysv init scripts for elogind
+ This package installs in /etc/init.d/ a Sysv script required
+ to properly start elogind with Sysv-init. It will also
+ disable the elogind's default D-Bus service, replacing it with
+ one that does nothing, making the sysv script the default
+ way to start elogind in the system
+
+Package: elogind-run
+Architecture: linux-any
+Breaks: systemd-shim, elogind-sysv
+Replaces: systemd-shim, elogind-sysv
+Depends: ${misc:Depends}, elogind, runit
+Recommends: libpam-elogind
+Enhances: elogind
+Description: Runit run's init script for elogind
+ This package contains run script required to properly
+ start and supervise elogind as a Runit service. It will also
+ disable the elogind's default D-Bus service, replacing it with
+ one that does nothing, making the run script the default
+ way to start elogind in the system
+
+Package: libelogind0
+Architecture: linux-any
+Section: libs
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: login-related functionality offered by libsystemd0
+ Libelogind0 provides a subset of the facilities offered
+ by libsystemd0, implementing the login-related functionality only.
+ It also provides the sd-bus API
+
+Package: libpam-elogind
+Architecture: linux-any
+Breaks: libpam-systemd
+Replaces: libpam-systemd
+Provides: libpam-systemd
+Depends: ${shlibs:Depends}, ${misc:Depends},
+        elogind (= ${binary:Version})
+Description: PAM module for elogind
+ This package contains the PAM module which registers user
+ sessions in control group hierarchy for elogind. This package
+ will provide the libpam-systemd functionality in systems where
+ elogind is replacing systemd-logind
+
+Package: libelogind-dev
+Architecture: linux-any
+Section: libdevel
+Recommends: libelogind-doc | libsystemd-dev
+Depends: ${misc:Depends},
+        elogind (= ${binary:Version})
+Description: subset of the facilities offered by libsystemd, development headers
+ Libelogind just implements login-related functionality. It also
+ provides the sd-bus API
+ .
+ This package contains the development files.
+
+Package: libelogind-doc
+Architecture: all
+Section: doc
+Conflicts: libsystemd-dev
+Depends: ${misc:Depends}, libelogind-dev
+Description: subset of the facilities offered by libsystemd, manpages
+ Libelogind just implements login-related functionality. It also
+ provides the sd-bus API
+ .
+ This package contains the manpages.

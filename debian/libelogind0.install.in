@@ -1,0 +1,7 @@
+#lib/x86_64-linux-gnu/libelogind.so.0
+lib/*/libelogind.so.0
+#lib/x86_64-linux-gnu/libelogind.so.0.19.*
+#lib/x86_64-linux-gnu/libelogind.so.0.20.*
+lib/*/libelogind.so.0.23.*
+lib/elogind/libelogind-shared-* lib/DEB_HOST_MULTIARCH/
+#usr/lib/elogind/libelogind-shared-* lib/elogind/

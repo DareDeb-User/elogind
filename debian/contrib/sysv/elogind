@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# File: /etc/init.d/elogind
+
+### BEGIN INIT INFO
+# Provides:          elogind
+# Required-Start:    dbus $local_fs
+# Required-Stop:     dbus $local_fs
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: elogind session manager
+# Description:       starts elogind
+### END INIT INFO
+
+DAEMON="/lib/elogind/elogind"
+NAME=elogind
+DESC="Elogind"
+PIDFILE="/var/run/elogind.pid"
+SYSV_START="/lib/elogind/sysv-elogind"
+
+. /lib/lsb/init-functions
+
+test -f $DAEMON || exit 0
+test  -L $SYSV_START || exit 0
+
+case "$1" in
+  start)
+  log_daemon_msg "Creating directories for elogind..."
+          test -d /run/systemd/ || mkdir -p /run/systemd/
+          test -d /run/user || mkdir -p /run/user/
+          test -d /sys/fs/cgroup || exit 1
+#          test -d /sys/fs/cgroup/elogind/ || mkdir -p /sys/fs/cgroup/elogind/
+  echo "done."
+  log_daemon_msg "Mounting /run and cgroup filesystems..."
+          mountpoint /run/user/ >/dev/null || mount -t tmpfs none /run/user/ -o mode=755
+#          mountpoint /sys/fs/cgroup/elogind/ >/dev/null || mount -t cgroup cgroup /sys/fs/cgroup/elogind -o none,name=elogind
+  echo "done."
+  log_daemon_msg "Starting elogind"
+  start-stop-daemon --start --make-pidfile  --pidfile "$PIDFILE" --exec "$DAEMON" -- --daemon
+  log_end_msg $?
+    ;;
+  stop)
+    log_daemon_msg "Stopping elogind"
+    start-stop-daemon --stop --remove-pidfile --pidfile "$PIDFILE"  --exec "$DAEMON"
+    log_end_msg $?
+    ;;
+  status)
+    status_of_proc -p $PIDFILE $DAEMON $NAME && exit 0 || exit $?
+    ;;
+  restart|reload|force-reload) echo "not yet implemented"
+    ;;
+  *)
+    echo "Usage: $NAME {start|stop|status|restart|reload|force-reload}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

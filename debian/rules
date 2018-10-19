@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE = 1
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	-Drootlibdir=/lib"/$(DEB_HOST_MULTIARCH)" \
+	-Dpamconfdir=no \
+	-Ddbuspolicydir=/usr/share/dbus-1/system.d/ \
+	-Dzshcompletiondir=/usr/share/zsh/vendor-completions \
+	-Dselinux=false \
+	-Dslow-tests=false \
+	-Dwerror=false \
+	-Dnobody-user=nobody \
+	-Dnobody-group=nogroup \
+	-Ddefault-kill-user-processes=false \
+	-Dpoweroff-path=/sbin/shutdown \
+	-Ddebug-extra=elogind \
+	-Dcgroup-controller=elogind
+# does openrc need it's own controller?
+
+override_dh_auto_test:
+ifeq (, $(filter nocheck, $(DEB_BUILD_OPTIONS)))
+## login-test is known to fail in chroot, see issue #45 upstream
+## https://github.com/elogind/elogind/issues/45
+## ship the tests output with elogind's doc
+	(dh_auto_test; echo $?) > test-results
+else
+# skip the tests to reduce build time when requested, but the test-results file
+# is still needed for dh_install
+		echo "nocheck build_option detected, skipping all tests" > test-results
+endif
+
+override_dh_install:
+	sed 's/DEB_HOST_MULTIARCH/$(DEB_HOST_MULTIARCH)/' debian/libelogind0.install.in > debian/libelogind0.install
+	dh_install test-results /usr/share/doc/elogind/
+# files shipped by udev
+	rm debian/elogind/lib/udev/rules.d/70-power-switch.rules
+# extra licence files, already in copyright file
+	rm debian/elogind/usr/share/doc/elogind-*/LICENSE.GPL2
+	rm debian/elogind/usr/share/doc/elogind-*/LICENSE.LGPL2.1
+
+override_dh_auto_clean:
+	rm -f debian/libelogind0.install
+	rm -rf tools/__pycache__
+	rm -f src/basic/config.h
+	rm -f test-results
+	dh_auto_clean
+%:
+	dh $@ --without autoreconf,systemd --buildsystem=meson
